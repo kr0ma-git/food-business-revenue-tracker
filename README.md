@@ -1,6 +1,6 @@
 # Food Business Revenue Tracking System - IM 2 Project
 
-## How to Deploy
+## How to Preview
 
 - Install and Set up PHP Server and Live Server Extensions on your preferred code editor.
 
