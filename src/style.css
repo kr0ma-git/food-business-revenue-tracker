@@ -1,0 +1,108 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    text-decoration: none;
+}
+
+
+
+body {
+    background-color: #ffffff;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #264EFF;
+    padding: 1rem 2rem;
+    color: white;
+}
+
+@media (max-width: 600px) {
+    .nav-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-links {
+        margin-top: 0.5rem;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 1rem;
+    }
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links a {
+    margin-left: 1rem;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.landing-wrapper {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.landing-intro h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.landing-intro h4 {
+    font-weight: 400;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.landing-intro p {
+    font-size: 1rem;
+    margin: 1rem 0;
+}
+
+.login-option {
+    margin-top: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #263EFF;
+    color: white;
+    padding: 0.75rem 2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #1a2edb;
+}
