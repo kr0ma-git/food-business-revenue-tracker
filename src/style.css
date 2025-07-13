@@ -7,8 +7,6 @@
     text-decoration: none;
 }
 
-
-
 body {
     background-color: #ffffff;
     color: #333;
@@ -19,22 +17,6 @@ header {
     background-color: #264EFF;
     padding: 1rem 2rem;
     color: white;
-}
-
-@media (max-width: 600px) {
-    .nav-container {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .nav-links {
-        margin-top: 0.5rem;
-    }
-
-    .btn {
-        width: 100%;
-        padding: 1rem;
-    }
 }
 
 .nav-container {
@@ -71,6 +53,15 @@ header {
     text-align: center;
 }
 
+.landing-image img {
+    max-width: 50%;
+    max-height: 50%;
+    margin: 1rem 0 2rem;
+    border: transparent;
+    border-radius: 10px;
+    box-shadow: 7px 7px rgb(177, 174, 174);
+}
+
 .landing-intro h2 {
     font-size: 2rem;
     margin-bottom: 0.5rem;
@@ -78,13 +69,15 @@ header {
 
 .landing-intro h4 {
     font-weight: 400;
-    color: #666;
-    margin-bottom: 1rem;
+    font-style: italic;
+    color: #264EFF;
+    margin-bottom: 2rem;
 }
 
 .landing-intro p {
     font-size: 1rem;
-    margin: 1rem 0;
+    padding: 0 6rem;
+    /* margin: 1rem 5rem; */
 }
 
 .login-option {
@@ -105,4 +98,101 @@ header {
 
 .btn:hover {
     background-color: #1a2edb;
+}
+
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #FEFAE0, #7797dd);
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.login-container h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    color: #333;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    display: block;
+    color: #444;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+    border-color: #263EFF;
+    outline: none;
+}
+
+.btn {
+    padding: 0.75rem;
+    border: none;
+    background-color: #263EFF;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #1a2edb;
+}
+
+.error-msg {
+    color: #d10000;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .nav-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-links {
+        margin-top: 0.5rem;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .landing-intro p {
+        padding: 0;
+    }
 }
