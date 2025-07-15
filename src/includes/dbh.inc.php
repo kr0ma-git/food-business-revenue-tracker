@@ -8,13 +8,13 @@
 
     /* Code below is for the DCISM domain. */
 
-    define('DB_USERNAME_REMOTE', 's22102758_entrackingdb'); // *SUBJECT TO CHANGE* Can also use other members' DCISM databases.
-    define('DB_PASSWORD_REMOTE', 'eddhasngohiong'); // *SUBJECT TO CHANGE* Actually, please change this...
-    define('DB_NAME_REMOTE', 's22102758_entrackingdb'); // *SUBJECT TO CHANGE* Same with DB_USERNAME_REMOTE.
+    define('DB_USERNAME_REMOTE', 's22102758_eddsrevenuetracker'); // *SUBJECT TO CHANGE* Can also use other members' DCISM databases.
+    define('DB_PASSWORD_REMOTE', 'eddtrack'); // *SUBJECT TO CHANGE* Actually, please change this...
+    define('DB_NAME_REMOTE', 's22102758_eddsrevenuetracker'); // *SUBJECT TO CHANGE* Same with DB_USERNAME_REMOTE.
 
     // Verifying...
 
-    $isOnRemote = ($_SERVER['HTTP_HOST'] === 'entracking.dcism.org'); // *SUBJECT TO CHANGE* If this is changed, change the condition to match the chosen URL.
+    $isOnRemote = ($_SERVER['HTTP_HOST'] === 'eddsrevenuetracker.dcism.org'); // *SUBJECT TO CHANGE* If this is changed, change the condition to match the chosen URL.
 
     if ($isOnRemote) {
         $dbUsername = DB_USERNAME_REMOTE;
