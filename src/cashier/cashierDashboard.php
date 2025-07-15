@@ -29,8 +29,13 @@
 </head>
 <body>
     <section class="dashboard-wrapper">
-        <h2>Welcome, <?= htmlspecialchars($cashierName); ?></h2>
-        <p class="subtitle">Monitor today's performance and manage transactions</p>
+        <div class="dashboard-top">
+            <div class="dashboard-welcome">
+                <h2>Welcome, <?= htmlspecialchars($cashierName); ?></h2>
+                <p class="subtitle">Monitor today's performance and manage transactions</p>
+            </div>
+            <a href="../includes/logout.inc.php" class="logout-btn">Logout</a>
+        </div>
 
         <div class="summary-grid">
             <div class="summary-card">

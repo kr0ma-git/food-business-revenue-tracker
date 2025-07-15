@@ -24,6 +24,32 @@ body {
     color: #1e40af;
 }
 
+.dashboard-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.dashboard-welcome {
+    flex-grow: 1;
+}
+
+.logout-btn {
+    background-color: #ef4444;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: #b91c1c;
+}
+
 .subtitle {
     font-size: 1rem;
     color: #6b7280;
