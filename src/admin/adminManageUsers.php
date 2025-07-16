@@ -48,43 +48,6 @@
             <p>View, add, or update user accounts</p>
         </div>
 
-        <div class="user-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Created</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($users as $user): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></td>
-                            <td><?= htmlspecialchars($user['email']); ?></td>
-                            <td><?= ucfirst($user['role']); ?></td>
-                            <td><?= $user['is_disabled'] ? 'Disabled' : 'Active'; ?></td>
-                            <td><?= $user['created_at']; ?></td>
-                            <td>
-                                <form action="../includes/adminToggleUser.inc.php" method="POST" style="display: inline;">
-                                    <input type="hidden" name="user_id" value="<?= $user['user_id']; ?>">
-                                    <button type="submit" class="btn small-btn">
-                                        <?= $user['is_disabled'] ? 'Enable' : 'Disable'; ?>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-
-
-        <hr style="margin: 2rem 0;">
-
         <div class="add-user-form">
             <h3>Add New User</h3>
             <?php if (isset($_GET['error'])) {
@@ -119,7 +82,73 @@
                 </div>
             </form>
         </div>
-    </section>
 
+        <hr style="margin: 2rem 0;">
+
+
+        <h4 style="margin-top: 20px; margin-bottom: 10px;">Search:</h4>
+        <input type="text" id="search" placeholder="Search by Name..." autocomplete="off">
+        <p id="no-user-results" style="display: none;">No users found matching your search.</p>
+        <br><br>
+
+        <div class="user-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($users as $user): ?>
+                        <tr class="user-row" data-user-naming="<?= strtolower(htmlspecialchars($user['first_name'] . ' ' . $user['last_name'])); ?>">
+                            <td><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></td>
+                            <td><?= htmlspecialchars($user['email']); ?></td>
+                            <td><?= ucfirst($user['role']); ?></td>
+                            <td><?= $user['is_disabled'] ? 'Disabled' : 'Active'; ?></td>
+                            <td><?= $user['created_at']; ?></td>
+                            <td>
+                                <form action="../includes/adminToggleUser.inc.php" method="POST" style="display: inline;">
+                                    <input type="hidden" name="user_id" value="<?= $user['user_id']; ?>">
+                                    <button type="submit" class="btn small-btn">
+                                        <?= $user['is_disabled'] ? 'Enable' : 'Disable'; ?>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search');
+            const userRows = document.querySelectorAll('.user-row');
+            const noResultsMessage = document.getElementById('no-user-results');
+
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase();
+                let visibleCount = 0;
+
+                userRows.forEach(row => {
+                    const name = row.getAttribute('data-user-naming');
+                    
+                    if (name.includes(searchTerm)) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                noResultsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+            });
+        });
+    </script>
 </body>
 </html>

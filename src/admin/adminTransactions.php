@@ -48,41 +48,6 @@
             <p>All customer payments and orders</p>
         </div>
 
-        <div class="user-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Transaction ID</th>
-                        <th>Customer Name</th>
-                        <th>Payment</th>
-                        <th>Date Created</th>
-                        <th>Date Updated</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($transactions as $tx): ?>
-                        <tr>
-                            <td>#<?= $tx['transaction_id']; ?></td>
-                            <td><?= htmlspecialchars($tx['first_name'] . ' ' . $tx['last_name']); ?></td>
-                            <td><?= number_format($tx['amount'], 2); ?></td>
-                            <td><?= date("M d, Y h:i A", strtotime($tx['created_at'])); ?></td>
-                            <td><?= $tx['updated_at'] ? date("M d, Y h:i A", strtotime($tx['udpated_at'])) : '-'; ?></td>
-                            <td>
-                                <form action="../includes/adminDeleteTransaction.inc.php" method="POST" style="display: inline">
-                                    <input type="hidden" name="transaction_id" value="<?= $tx['transaction_id']; ?>">
-                                    <button type="submit" name="submit" class="btn small-btn" style="background-color: #ef4444; color: white; border-radius: 10px;">
-                                        Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <br><hr><br><br>
-
         <div class="add-user-form">
             <h3>Add New Transaction</h3>
             <form action="../includes/adminAddTransaction.inc.php" method="POST" class="forms">
@@ -107,6 +72,72 @@
                 </div>
             </form>
         </div>
+
+        <br><br><hr><br>
+
+        <h4 style="margin-top: 20px; margin-bottom: 10px;">Search:</h4>
+        <input type="text" id="search" placeholder="Search by Transaction ID..." autocomplete="off">
+        <p id="no-transaction-results" style="display: none;">No transactions found matching your search.</p>
+        <br><br>
+
+        <div class="user-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Customer Name</th>
+                        <th>Payment</th>
+                        <th>Date Created</th>
+                        <th>Date Updated</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($transactions as $tx): ?>
+                        <tr class="transaction-row" data-user-naming="<?= htmlspecialchars($tx['transaction_id']); ?>">
+                            <td>#<?= $tx['transaction_id']; ?></td>
+                            <td><?= htmlspecialchars($tx['first_name'] . ' ' . $tx['last_name']); ?></td>
+                            <td><?= number_format($tx['amount'], 2); ?></td>
+                            <td><?= date("M d, Y h:i A", strtotime($tx['created_at'])); ?></td>
+                            <td><?= $tx['updated_at'] ? date("M d, Y h:i A", strtotime($tx['updated_at'])) : '-'; ?></td>
+                            <td>
+                                <form action="../includes/adminDeleteTransaction.inc.php" method="POST" style="display: inline">
+                                    <input type="hidden" name="transaction_id" value="<?= $tx['transaction_id']; ?>">
+                                    <button type="submit" name="submit" class="btn small-btn" style="background-color: #ef4444; color: white; border-radius: 10px;">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search');
+            const userRows = document.querySelectorAll('.transaction-row');
+            const noResultsMessage = document.getElementById('no-transaction-results');
+
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase();
+                let visibleCount = 0;
+
+                userRows.forEach(row => {
+                    const name = row.getAttribute('data-user-naming');
+                    
+                    if (name.includes(searchTerm)) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                noResultsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+            });
+        });
+    </script>
 </body>
 </html>
