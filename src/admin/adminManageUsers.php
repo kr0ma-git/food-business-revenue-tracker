@@ -127,7 +127,7 @@
                             <td>
                                 <form action="../includes/adminToggleUser.inc.php" method="POST" style="display: inline;">
                                     <input type="hidden" name="user_id" value="<?= $user['user_id']; ?>">
-                                    <button type="submit" class="btn small-btn">
+                                    <button type="submit" class="btn small-btn" style="background-color: #ef4444; color: white; border-radius: 10px;">
                                         <?= $user['is_disabled'] ? 'Enable' : 'Disable'; ?>
                                     </button>
                                 </form>
