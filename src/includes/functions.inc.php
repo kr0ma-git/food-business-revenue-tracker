@@ -63,7 +63,7 @@
         exit();
     }
     function getDailyRevenueSummary($conn) {
-        $sql = "SELECT SUM(amount) AS total, COUNT(*) AS count FROM transactions WHERE DATE(created_at) = CURDATE() AND is_deleted = 0;";
+        $sql = "SELECT COUNT(*) AS count, quantity * p.price AS total FROM transactions JOIN products p ON transactions.product_id = p.product_id WHERE DATE(created_at) = CURDATE() AND is_deleted = 0;";
         $stmt = mysqli_stmt_init($conn);
 
         if (!mysqli_stmt_prepare($stmt, $sql)) {
@@ -104,6 +104,46 @@
         mysqli_stmt_close($stmt);
         return $users;
     }
+    function getAllCustomers($conn) {
+        $sql = "SELECT customer_id, full_name FROM customers;";
+        $stmt = mysqli_stmt_init($conn);
+
+        if (!mysqli_stmt_prepare($stmt, $sql)) {
+            header("Location: ../index.php");
+            exit();
+        }
+
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $customers = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $customers[] = $row;
+        }
+
+        mysqli_stmt_close($stmt);
+        return $customers;
+    }
+    function getAllProducts($conn) {
+        $sql = "SELECT product_id, product_name, price FROM products;";
+        $stmt = mysqli_stmt_init($conn);
+
+        if (!mysqli_stmt_prepare($stmt, $sql)) {
+            header("Location: ../index.php?error=stmtFailed");
+            exit();
+        }
+
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $products = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $products[] = $row;
+        }
+
+        mysqli_stmt_close($stmt);
+        return $products;
+    }
     function userToggle($conn, $userID) {
         $sql = 'UPDATE users SET is_disabled = NOT is_disabled WHERE user_id = ?;';
         $stmt = mysqli_stmt_init($conn);
@@ -139,7 +179,7 @@
         exit();
     }
     function getAllTransactions($conn) {
-        $sql = "SELECT t.transaction_id, t.amount, t.created_at, t.updated_at, u.first_name, u.last_name FROM transactions t JOIN users u ON t.user_id = u.user_id WHERE t.is_deleted = 0 ORDER BY t.created_at DESC;";
+        $sql = "SELECT t.transaction_id, t.quantity * p.price AS amount, t.created_at, c.full_name, c.customer_address, c.contact_number, t.quantity, t.payment_type, p.product_name FROM transactions t LEFT JOIN customers c ON t.customer_id = c.customer_id JOIN products p ON t.product_id = p.product_id WHERE t.is_deleted = 0 ORDER BY t.created_at DESC;";
         $stmt = mysqli_stmt_init($conn);
 
         if (!mysqli_stmt_prepare($stmt, $sql)) {
@@ -159,16 +199,32 @@
         mysqli_stmt_close($stmt);
         return $transactions;
     }
-    function addTransaction($conn, $userID, $amount) {
-        $sql = "INSERT INTO transactions (user_id, amount, created_at, is_deleted) VALUES (?, ?, NOW(), 0);";
+    function addTransaction($conn, $userID, $productID, $quantity) {
+        $sql = "INSERT INTO transactions (customer_id, product_id, quantity, created_at, is_deleted) VALUES (?, ?, ?, NOW(), 0)";
         $stmt = mysqli_stmt_init($conn);
 
         if (!mysqli_stmt_prepare($stmt, $sql)) {
-            header("Location: ../index.php?error=stmtFailed");
+            header("Location: ../admin/adminTransactions.php?error=stmtFailed");
             exit();
         }
 
-        mysqli_stmt_bind_param($stmt, "id", $userID, $amount);
+        mysqli_stmt_bind_param($stmt, "iii", $userID, $productID, $quantity);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        header("Location: ../admin/adminTransactions.php?success=transactionAdded");
+        exit();
+    }
+    function addTransactionsWalkIn($conn, $userID, $productID, $quantity) {
+        $sql = "INSERT INTO transactions (customer_id, product_id, quantity, created_at, is_deleted) VALUES (99, ?, ?, NOW(), 0)";
+        $stmt = mysqli_stmt_init($conn);
+
+        if (!mysqli_stmt_prepare($stmt, $sql)) {
+            header("Location: ../admin/adminTransactions.php?error=stmtFailed");
+            exit();
+        }
+
+        mysqli_stmt_bind_param($stmt, "iii", $userID, $productID, $quantity);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
 
@@ -208,11 +264,11 @@
         ];
     }
     function getWeeklyRevenueSummary($conn) {
-        $sql = "SELECT SUM(amount) AS total, COUNT(*) AS count FROM transactions WHERE YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1) AND is_deleted = 0;";
+        $sql = "SELECT SUM(t.quantity * p.price) AS total, COUNT(*) AS count FROM transactions t JOIN products p ON t.product_id = p.product_id WHERE YEARWEEK(t.created_at, 1) = YEARWEEK(CURDATE(), 1) AND t.is_deleted = 0;";
         return getSingleSummary($conn, $sql);
     }
     function getMonthlyRevenueSummary($conn) {
-        $sql = "SELECT SUM(amount) AS total, COUNT(*) AS count FROM transactions WHERE YEAR(created_at) = YEAR(CURDATE()) AND MONTH(created_at) = MONTH(CURDATE()) AND is_deleted = 0";
+        $sql = "SELECT SUM(t.quantity * p.price) AS total, COUNT(*) AS count FROM transactions t JOIN products p ON t.product_id = p.product_id WHERE YEAR(t.created_at) = YEAR(CURDATE()) AND MONTH(t.created_at) = MONTH(CURDATE()) AND t.is_deleted = 0;";
         return getSingleSummary($conn, $sql);
     }
     function cashierInsertTransaction($conn, $userID, $amount) {
@@ -249,7 +305,7 @@
         return $transactions;
     }
     function getRecentTransactions($conn) {
-        $sql = "SELECT t.amount, t.created_at, u.first_name, u.last_name FROM transactions t JOIN users u ON t.user_id = u.user_id WHERE t.is_deleted = 0 ORDER BY t.created_at DESC LIMIT 3;";
+        $sql = "SELECT t.transaction_id, c.full_name, t.created_at, t.quantity * p.price AS amount FROM transactions t JOIN customers c ON t.customer_id = c.customer_id JOIN products p ON t.product_id = p.product_id WHERE t.is_deleted = 0 ORDER BY t.created_at DESC LIMIT 3;";
         $stmt = mysqli_stmt_init($conn);
 
         if (!mysqli_stmt_prepare($stmt, $sql)) {
@@ -263,4 +319,31 @@
         $transactions = mysqli_fetch_all($result, MYSQLI_ASSOC);
         mysqli_stmt_close($stmt);
         return $transactions;
+    }
+    function addCustomer($conn, $fullName, $contact, $address) {
+        $sql = "INSERT INTO customers (full_name, contact_number, customer_address) VALUES (?, ?, ?);";
+        $stmt = mysqli_stmt_init($conn);
+        if (!mysqli_stmt_prepare($stmt, $sql)) {
+            header("Location: ../pages/addTransaction.php?error=stmtFailed");
+            exit();
+        }
+
+        mysqli_stmt_bind_param($stmt, "sss", $fullName, $contact, $address);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
+    function customerExists($conn, $fullName, $contact) {
+        $sql = "SELECT * FROM customers WHERE full_name = ? AND contact_number = ? LIMIT 1;";
+        $stmt = mysqli_stmt_init($conn);
+        if (!mysqli_stmt_prepare($stmt, $sql)) {
+            return false;
+        }
+
+        mysqli_stmt_bind_param($stmt, "ss", $fullName, $contact);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $exists = mysqli_fetch_assoc($result);
+        mysqli_stmt_close($stmt);
+
+        return $exists ? true : false;
     }

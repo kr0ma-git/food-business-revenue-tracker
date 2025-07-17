@@ -11,12 +11,17 @@
         require_once 'functions.inc.php';
 
         $userID = $_POST['user_id'];
-        $amount = $_POST['amount'];
+        $productID = $_POST['product_id'];
+        $quantity = $_POST['quantity'];
 
-        if (empty($userID) || empty($amount)) {
-            header("Location: ../admin/adminTransactions.inc.php?error=invalidInput");
+        if (empty($userID) || empty($productID) || empty($quantity)) {
+            header("Location: ../admin/adminTransactions.php?error=invalidInput");
             exit();
         }
-    }
 
-    addTransaction($conn, $userID, $amount);
+        if ($userID == 0) {
+            addTransactionsWalkIn($conn, $userID, $productID, $quantity);
+        } else {
+            addTransaction($conn, $userID, $productID, $quantity);
+        }
+    }

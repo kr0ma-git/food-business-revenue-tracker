@@ -10,8 +10,18 @@
         require_once 'dbh.inc.php';
         require_once 'functions.inc.php';
 
-        $userID = $_SESSION['userID'];
-        $amount = floatval($_POST['amount']);
+        $userID = $_POST['user_id'];
+        $productID = $_POST['product_id'];
+        $quantity = $_POST['quantity'];
 
-        cashierInsertTransaction($conn, $userID, $amount);
+        if (empty($userID) || empty($productID) || empty($quantity)) {
+            header("Location: ../admin/adminTransactions.php?error=invalidInput");
+            exit();
+        }
+
+        if ($userID == 0) {
+            addTransactionsWalkIn($conn, $userID, $productID, $quantity);
+        } else {
+            addTransaction($conn, $userID, $productID, $quantity);
+        }
     }

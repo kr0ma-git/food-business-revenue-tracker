@@ -49,7 +49,7 @@
         </div>
 
         <div class="add-user-form">
-            <h3>Add New User</h3>
+            <h3>Add New Company Users</h3>
             <?php if (isset($_GET['error'])) {
                 if ($_GET['error'] == 'emptyFields') {
                     echo "<p class='error'>Please fill in all fields!</p>";
@@ -65,12 +65,20 @@
 
             <form action="../includes/adminCreateUser.inc.php" method="POST" class="forms">
                 <div class="form-row">
-                    <input type="text" name="first_name" placeholder="First Name" required>
+                    <label for="first-name">First Name:</label>
+                    <input type="text" name="first_name" placeholder="First Name" id="first-name" required>
+                </div>
+                <div class="form-row">
+                    <label for="last-name">Last Name:</label>
                     <input type="text" name="last_name" placeholder="Last Name" required>
                 </div>
                 <div class="form-row">
-                    <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="password" placeholder="Password" required>
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" placeholder="Email" id="email" required>
+                </div>
+                <div class="form-row">
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" placeholder="Password" id="password" required>
                 </div>
                 <div class="form-row" id="role-form-row">
                     <select name="role" id="role-select" required>
@@ -78,10 +86,36 @@
                         <option value="admin">Admin</option>
                         <option value="cashier">Cashier</option>
                     </select>
-                    <button type="submit" name="submit" class="btn">Create User</button>
                 </div>
+                <button type="submit" name="submit" class="btn">Create User</button>
             </form>
         </div>
+
+        <br><br>
+
+        <div class="add-user-form">
+            <h3 style="margin-bottom: 30px;">Add New Customer</h3>
+            <form action="../includes/adminAddCustomer.inc.php" method="POST">
+                <div class="form-row">
+                    <label for="full_name">Full Name:</label>
+                    <input type="text" name="full_name" id="full_name" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="contact_number">Contact Number:</label>
+                    <input type="text" name="contact_number" id="contact_number" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="address">Address:</label>
+                    <input type="text" name="address" id="address" required>
+                </div>
+
+                <button type="submit" name="add_customer" class="btn" style="margin-bottom: 10px;">Add Customer</button>
+            </form>
+        </div>
+
+        <br><br>
 
         <hr style="margin: 2rem 0;">
 
@@ -127,7 +161,7 @@
                             <td>
                                 <form action="../includes/adminToggleUser.inc.php" method="POST" style="display: inline;">
                                     <input type="hidden" name="user_id" value="<?= $user['user_id']; ?>">
-                                    <button type="submit" class="btn small-btn" style="background-color: #ef4444; color: white; border-radius: 10px;">
+                                    <button type="submit" class="btn small-btn" style="background-color: blue; color: white; border-radius: 10px;">
                                         <?= $user['is_disabled'] ? 'Enable' : 'Disable'; ?>
                                     </button>
                                 </form>

@@ -69,10 +69,10 @@
             <div class="transaction-cards">
                 <?php foreach ($recentTransactions as $tx): ?>
                 <div class="transaction-card">
-                    <div class="tx-amount">₱<?= number_format($tx['amount'], 2) ?></div>
+                    <div class="tx-amount">₱<?= number_format($tx['amount'], 2); ?></div>
                     <div class="tx-meta">
-                    <span class="tx-user"><?= htmlspecialchars($tx['first_name'] . ' ' . $tx['last_name']) ?></span>
-                    <span class="tx-time"><?= date("M d, Y g:i A", strtotime($tx['created_at'])) ?></span>
+                    <span class="tx-user"><?= htmlspecialchars($tx['full_name']); ?></span>
+                    <span class="tx-time"><?= date("M d, Y g:i A", strtotime($tx['created_at'])); ?></span>
                     </div>
                 </div>
                 <?php endforeach; ?>
