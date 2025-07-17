@@ -248,3 +248,19 @@
         mysqli_stmt_close($stmt);
         return $transactions;
     }
+    function getRecentTransactions($conn) {
+        $sql = "SELECT t.amount, t.created_at, u.first_name, u.last_name FROM transactions t JOIN users u ON t.user_id = u.user_id WHERE t.is_deleted = 0 ORDER BY t.created_at DESC LIMIT 3;";
+        $stmt = mysqli_stmt_init($conn);
+
+        if (!mysqli_stmt_prepare($stmt, $sql)) {
+            header("Location: ../index.php?error=stmtFailed");
+            exit();
+        }
+
+        mysqli_stmt_execute($stmt);
+        
+        $result = mysqli_stmt_get_result($stmt);
+        $transactions = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        mysqli_stmt_close($stmt);
+        return $transactions;
+    }

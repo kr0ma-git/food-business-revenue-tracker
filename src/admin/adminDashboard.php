@@ -12,6 +12,7 @@
     require_once '../includes/functions.inc.php';
 
     $summary = getDailyRevenueSummary($conn); // Array of total and count of transactions.
+    $recentTransactions = getRecentTransactions($conn);
 ?>
 
 <!DOCTYPE html>
@@ -63,12 +64,18 @@
             </div>
         </div>
 
-        <div class="admin-actions">
-            <h3 class="section-title">Quick Actions</h3>
-            <div class="admin-links">
-                <a href="adminTransactions.php" class="btn"><i class="fas fa-file-alt"></i> Transactions</a>
-                <a href="adminReports.php" class="btn"><i class="fas fa-chart-line"></i> Reports</a>
-                <a href="adminManageUsers.php" class="btn"><i class="fas fa-user-cog"></i> Manage Users</a>
+        <h2>Recent Transactions</h2>
+        <div class="recent-transactions">
+            <div class="transaction-cards">
+                <?php foreach ($recentTransactions as $tx): ?>
+                <div class="transaction-card">
+                    <div class="tx-amount">₱<?= number_format($tx['amount'], 2) ?></div>
+                    <div class="tx-meta">
+                    <span class="tx-user"><?= htmlspecialchars($tx['first_name'] . ' ' . $tx['last_name']) ?></span>
+                    <span class="tx-time"><?= date("M d, Y g:i A", strtotime($tx['created_at'])) ?></span>
+                    </div>
+                </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>
