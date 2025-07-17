@@ -194,11 +194,24 @@ body {
     font-weight: 600;
 }
 
+.user-table {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
 .user-table table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 2rem;
     overflow-x: auto;
+    overflow-y: auto;
+}
+
+.user-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f1f5f9;
 }
 
 .user-table th, .user-table td {

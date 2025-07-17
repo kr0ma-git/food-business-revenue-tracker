@@ -85,11 +85,23 @@
 
         <hr style="margin: 2rem 0;">
 
-
-        <h4 style="margin-top: 20px; margin-bottom: 10px;">Search:</h4>
-        <input type="text" id="search" placeholder="Search by Name..." autocomplete="off">
-        <p id="no-user-results" style="display: none;">No users found matching your search.</p>
-        <br><br>
+        <div class="filters">
+            <div class="name-filter">
+                <h4 style="margin-top: 20px; margin-bottom: 10px;">Search:</h4>
+                <input type="text" id="search" placeholder="Search by Name..." autocomplete="off">
+                <p id="no-user-results" style="display: none;">No users found matching your search.</p>
+            </div>
+            <br>
+            <div class="role-filter">
+                <label for="role-filter">Filter by Role:</label>
+                <select id="role-filter">
+                    <option value="all">All</option>
+                    <option value="admin">Admin</option>
+                    <option value="cashier">Cashier</option>
+                </select>
+            </div>
+        </div>
+        <br>
 
         <div class="user-table">
             <table>
@@ -105,7 +117,8 @@
                 </thead>
                 <tbody>
                     <?php foreach ($users as $user): ?>
-                        <tr class="user-row" data-user-naming="<?= strtolower(htmlspecialchars($user['first_name'] . ' ' . $user['last_name'])); ?>">
+
+                        <tr class="user-row" data-user-naming="<?= strtolower(htmlspecialchars($user['first_name'] . ' ' . $user['last_name'])); ?>" class="user-row" data-role="<?= htmlspecialchars($user['role']) ?>">
                             <td><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></td>
                             <td><?= htmlspecialchars($user['email']); ?></td>
                             <td><?= ucfirst($user['role']); ?></td>
@@ -148,6 +161,21 @@
 
                 noResultsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
             });
+        });
+    </script>
+    <script>
+        document.getElementById('role-filter').addEventListener('change', function () {
+            const selectedRole = this.value;
+            const rows = document.querySelectorAll('.user-row');
+
+            rows.forEach(row => {
+                const role = row.getAttribute('data-role');
+                if (selectedRole === 'all' || role === selectedRole) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+        });
         });
     </script>
 </body>
