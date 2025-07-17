@@ -179,7 +179,7 @@
         exit();
     }
     function getAllTransactions($conn) {
-        $sql = "SELECT t.transaction_id, t.quantity * p.price AS amount, t.created_at, c.full_name, c.customer_address, c.contact_number, t.quantity, t.payment_type, p.product_name FROM transactions t LEFT JOIN customers c ON t.customer_id = c.customer_id JOIN products p ON t.product_id = p.product_id WHERE t.is_deleted = 0 ORDER BY t.created_at DESC;";
+        $sql = "SELECT t.transaction_id, t.quantity * p.price AS amount, t.created_at, u.user_id, u.first_name, u.last_name, t.quantity, t.payment_type, p.product_name FROM transactions t LEFT JOIN users u ON t.user_id = u.user_id JOIN products p ON t.product_id = p.product_id WHERE t.is_deleted = 0 ORDER BY t.created_at DESC;";
         $stmt = mysqli_stmt_init($conn);
 
         if (!mysqli_stmt_prepare($stmt, $sql)) {
@@ -200,7 +200,7 @@
         return $transactions;
     }
     function addTransaction($conn, $userID, $productID, $quantity) {
-        $sql = "INSERT INTO transactions (customer_id, product_id, quantity, created_at, is_deleted) VALUES (?, ?, ?, NOW(), 0)";
+        $sql = "INSERT INTO transactions (user_id, product_id, quantity, created_at, is_deleted) VALUES (?, ?, ?, NOW(), 0)";
         $stmt = mysqli_stmt_init($conn);
 
         if (!mysqli_stmt_prepare($stmt, $sql)) {
@@ -213,6 +213,22 @@
         mysqli_stmt_close($stmt);
 
         header("Location: ../admin/adminTransactions.php?success=transactionAdded");
+        exit();
+    }
+    function addTransactionCashier($conn, $userID, $productID, $quantity) {
+        $sql = "INSERT INTO transactions (user_id, product_id, quantity, created_at, is_deleted) VALUES (?, ?, ?, NOW(), 0)";
+        $stmt = mysqli_stmt_init($conn);
+
+        if (!mysqli_stmt_prepare($stmt, $sql)) {
+            header("Location: ../admin/adminTransactions.php?error=stmtFailed");
+            exit();
+        }
+
+        mysqli_stmt_bind_param($stmt, "iii", $userID, $productID, $quantity);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+        header("Location: ../cashier/cashierDashboard.php?success=transactionAdded");
         exit();
     }
     function addTransactionsWalkIn($conn, $userID, $productID, $quantity) {
@@ -305,7 +321,7 @@
         return $transactions;
     }
     function getRecentTransactions($conn) {
-        $sql = "SELECT t.transaction_id, c.full_name, t.created_at, t.quantity * p.price AS amount FROM transactions t JOIN customers c ON t.customer_id = c.customer_id JOIN products p ON t.product_id = p.product_id WHERE t.is_deleted = 0 ORDER BY t.created_at DESC LIMIT 3;";
+        $sql = "SELECT t.transaction_id, t.created_at, u.first_name, u.last_name, t.quantity * p.price AS amount FROM transactions t JOIN products p ON t.product_id = p.product_id JOIN users u ON t.user_id = u.user_id WHERE t.is_deleted = 0 ORDER BY t.created_at DESC LIMIT 3;";
         $stmt = mysqli_stmt_init($conn);
 
         if (!mysqli_stmt_prepare($stmt, $sql)) {

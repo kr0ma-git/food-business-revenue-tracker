@@ -19,9 +19,5 @@
             exit();
         }
 
-        if ($userID == 0) {
-            addTransactionsWalkIn($conn, $userID, $productID, $quantity);
-        } else {
-            addTransaction($conn, $userID, $productID, $quantity);
-        }
+        addTransaction($conn, $userID, $productID, $quantity);
     }

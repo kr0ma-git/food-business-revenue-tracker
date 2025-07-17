@@ -93,30 +93,6 @@
 
         <br><br>
 
-        <div class="add-user-form">
-            <h3 style="margin-bottom: 30px;">Add New Customer</h3>
-            <form action="../includes/adminAddCustomer.inc.php" method="POST">
-                <div class="form-row">
-                    <label for="full_name">Full Name:</label>
-                    <input type="text" name="full_name" id="full_name" required>
-                </div>
-
-                <div class="form-row">
-                    <label for="contact_number">Contact Number:</label>
-                    <input type="text" name="contact_number" id="contact_number" required>
-                </div>
-
-                <div class="form-row">
-                    <label for="address">Address:</label>
-                    <input type="text" name="address" id="address" required>
-                </div>
-
-                <button type="submit" name="add_customer" class="btn" style="margin-bottom: 10px;">Add Customer</button>
-            </form>
-        </div>
-
-        <br><br>
-
         <hr style="margin: 2rem 0;">
 
         <div class="filters">

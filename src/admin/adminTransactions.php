@@ -58,20 +58,6 @@
 
             <form action="../includes/adminAddTransaction.inc.php" method="POST" class="forms">
                 <div class="form-row">
-                    <label for="user_id">Customer Name:</label>
-                    <select name="user_id" id="user_id" required>
-                        <option value="" disabled selected>Select Customer</option>
-                        <?php 
-                            $customers = getAllCustomers($conn);
-                            foreach ($customers as $cust): ?>
-                                <option value="<?= $cust['customer_id']; ?>">
-                                    <?= htmlspecialchars($cust['full_name']); ?>
-                                </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div class="form-row">
                     <label for="product_id">Product:</label>
                     <select name="product_id" id="product_id" required>
                         <option value="" disabled selected>Select Product</option>
@@ -80,6 +66,20 @@
                             foreach ($products as $product): ?>
                                 <option value="<?= $product['product_id']; ?>">
                                     <?= htmlspecialchars($product['product_name']); ?> (₱<?= number_format($product['price'], 2); ?>)
+                                </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label for="user_id">Recorded By:</label>
+                    <select name="user_id" id="user_id" required>
+                        <option value="" disabled selected>Select Cashier</option>
+                        <?php 
+                            $users = getAllUsers($conn);
+                            foreach ($users as $users): ?>
+                                <option value="<?= $users['user_id']; ?>">
+                                    <?= htmlspecialchars($users['first_name'] . ' ' . $users['last_name']); ?>;
                                 </option>
                         <?php endforeach; ?>
                     </select>
@@ -117,10 +117,8 @@
                 <thead>
                     <tr>
                         <th>Transaction ID</th>
-                        <th>Customer Name</th>
-                        <th>Contact No.</th>
-                        <th>Address</th>
                         <th>Item</th>
+                        <th>Recorded By</th>
                         <th>Quantity</th>
                         <th>Amount</th>
                         <th>Payment Method</th>
@@ -132,10 +130,8 @@
                     <?php foreach ($transactions as $tx): ?>
                         <tr class="transaction-row" data-user-naming="<?= htmlspecialchars($tx['transaction_id']); ?>">
                             <td>#<?= $tx['transaction_id']; ?></td>
-                            <td><?= htmlspecialchars($tx['full_name']) ?? 'Guest'; ?></td>
-                            <td><?= htmlspecialchars($tx['contact_number']) ?? '-'; ?></td>
-                            <td><?= htmlspecialchars($tx['customer_address']); ?></td>
                             <td><?= htmlspecialchars($tx['product_name']); ?></td>
+                            <td><?= htmlspecialchars($tx['first_name'] . ' ' . $tx['last_name']); ?></td>
                             <td><?= $tx['quantity']; ?></td>
                             <td><?= number_format($tx['amount'], 2); ?></td>
                             <td><?= $tx['payment_type']; ?></td>
