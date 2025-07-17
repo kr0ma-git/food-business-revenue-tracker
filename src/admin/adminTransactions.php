@@ -56,6 +56,10 @@
                 <p class="success">Transaction Successfully Added!</p>
             <?php endif; ?>
 
+            <?php if (isset($_GET['success']) && $_GET['success'] === "transactionDeleted"): ?>
+                <p class="success">Transaction Successfully Deleted!</p>
+            <?php endif; ?>
+
             <form action="../includes/adminAddTransaction.inc.php" method="POST" class="forms">
                 <div class="form-row">
                     <label for="product_id">Product:</label>
