@@ -248,7 +248,7 @@
         exit();
     }
     function softDeleteTransaction($conn, $transactionID) {
-        $sql = "UPDATE transactions SET is_deleted = 1, updated_at = NOW() WHERE transaction_id = ?;";
+        $sql = "UPDATE transactions SET is_deleted = 1 WHERE transaction_id = ?;";
         $stmt = mysqli_stmt_init($conn);
 
         if (!mysqli_stmt_prepare($stmt, $sql)) {
