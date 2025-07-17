@@ -50,6 +50,12 @@
 
         <div class="add-user-form">
             <h3>Add New Transaction</h3>
+            <?php if (isset($_GET['success'])) {
+                    if ($_GET['success'] == "transactionAdded") {
+                        echo "<p style='color: greed;'>Transaction Succesfully Added!</p><br>";
+                    }
+                }
+             ?>
             <form action="../includes/adminAddTransaction.inc.php" method="POST" class="forms">
                 <div class="form-row">
                     <select name="user_id" required>

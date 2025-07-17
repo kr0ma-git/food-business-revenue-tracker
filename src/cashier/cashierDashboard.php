@@ -50,27 +50,35 @@
 
         <div class="add-transaction-form">
             <h3>Add Transactions</h3>
-            <div class="form-row">
-                <div class="user-info">
-                    <select name="user_id" required>
-                        <option value="" disabled selected>Select User</option>
-                        <?php 
-                            $users = getAllUsers($conn);
-                            foreach ($users as $user):
-                                if (!$user['is_disabled']):
-                        ?>
-                            <option value="<?= $user['user_id']; ?>">
-                                <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?>
-                            </option>
-                        <?php
-                            endif;
-                            endforeach;
-                        ?>
-                    </select>
-                    <input type="number" step="0.01" name="amount" placeholder="Amount (Php)" required>
+            <?php if (isset($_GET['success'])) {
+                    if ($_GET['success'] == "transactionAdded") {
+                        echo "<p style='color: greed;'>Transaction Succesfully Added!</p><br>";
+                    }
+                }
+             ?>
+            <form action="../includes/cashierAddTransaction.inc.php" method="POST">
+                <div class="form-row">
+                    <div class="user-info">
+                        <select name="user_id" required>
+                            <option value="" disabled selected>Select User</option>
+                            <?php 
+                                $users = getAllUsers($conn);
+                                foreach ($users as $user):
+                                    if (!$user['is_disabled']):
+                            ?>
+                                <option value="<?= $user['user_id']; ?>">
+                                    <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?>
+                                </option>
+                            <?php
+                                endif;
+                                endforeach;
+                            ?>
+                        </select>
+                        <input type="number" step="0.01" name="amount" placeholder="Amount (Php)" required>
+                    </div>
+                    <button type="submit" name="submit" class="btn">Add Transactions</button>
                 </div>
-                <button type="submit" name="submit" class="btn">Add Transactions</button>
-            </div>
+            </form>
         </div>
 
 
