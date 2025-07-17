@@ -84,6 +84,9 @@ body {
 }
 
 .add-transaction-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: white;
     padding: 2rem;
     border-radius: 1rem;
@@ -125,7 +128,30 @@ body {
     background-color: #4338ca;
 }
 
-.transaction-table h3 {
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.user-info input, .user-info select {
+    flex: 1 1 200px;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    font-size: 1rem;
+    min-width: 100px;
+    width: auto;
+}
+
+.transaction-table {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.transaction-text {
     font-size: 1.25rem;
     margin-bottom: 1rem;
     color: #1e40af;
@@ -136,8 +162,16 @@ body {
     border-collapse: collapse;
     background-color: white;
     border-radius: 0.75rem;
-    overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.transaction-table thead, th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f1f5f9;
 }
 
 .transaction-table th, .transaction-table td {

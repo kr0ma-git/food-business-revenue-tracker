@@ -12,7 +12,7 @@
     $cashierName = $_SESSION['userName'] ?? 'Cashier';
     $userID = $_SESSION['userID'];
     $summary = getDailyRevenueSummary($conn);
-    $transactions = getTransactionsByUser($conn, $userID);
+    $transactions = getAllTransactions($conn);
 ?>
 
 <!DOCTYPE html>
@@ -50,34 +50,85 @@
 
         <div class="add-transaction-form">
             <h3>Add Transactions</h3>
-            <form action="../includes/cashierAddTransaction.inc.php" method="POST">
-                <input type="hidden" name="user_id" value="<?= $userID; ?>">
-                <input type="number" step="0.01" name="amount" placeholder="Amount (Php)" required>
-                <button type="submit" name="submit">Add Transaction</button>
-            </form>
+            <div class="form-row">
+                <div class="user-info">
+                    <select name="user_id" required>
+                        <option value="" disabled selected>Select User</option>
+                        <?php 
+                            $users = getAllUsers($conn);
+                            foreach ($users as $user):
+                                if (!$user['is_disabled']):
+                        ?>
+                            <option value="<?= $user['user_id']; ?>">
+                                <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?>
+                            </option>
+                        <?php
+                            endif;
+                            endforeach;
+                        ?>
+                    </select>
+                    <input type="number" step="0.01" name="amount" placeholder="Amount (Php)" required>
+                </div>
+                <button type="submit" name="submit" class="btn">Add Transactions</button>
+            </div>
         </div>
 
+
+        <h4 style="margin-top: 20px; margin-bottom: 10px;">Search:</h4>
+        <input type="text" id="search" placeholder="Search by Transaction ID..." autocomplete="off">
+        <p id="no-transaction-results" style="display: none;">No transactions found matching your search.</p>
+        <br><br>
+
+        <h3 class="transaction-text">Transaction History</h3>
         <div class="transaction-table">
-            <h3>Transaction History</h3>
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>User Name</th>
                         <th>Amount</th>
                         <th>Created</th>
+                        <th>Updated At</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($transactions as $tx): ?>
-                        <tr>
+                        <tr class="transaction-row" data-user-naming="<?= htmlspecialchars($tx['transaction_id']); ?>">
                             <td>#<?= $tx['transaction_id']; ?></td>
+                            <td><?= htmlspecialchars($tx['first_name'] . ' ' . $tx['last_name']); ?></td>
                             <td><?= number_format($tx['amount'], 2); ?></td>
                             <td><?= date("M d, Y h:i A", strtotime($tx['created_at'])); ?></td>
+                            <td><?= $tx['updated_at'] ? date("M d, Y h:i A", strtotime($tx['updated_at'])) : '-'; ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search');
+            const userRows = document.querySelectorAll('.transaction-row');
+            const noResultsMessage = document.getElementById('no-transaction-results');
+
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase();
+                let visibleCount = 0;
+
+                userRows.forEach(row => {
+                    const name = row.getAttribute('data-user-naming');
+                    
+                    if (name.includes(searchTerm)) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                noResultsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+            });
+        });
+    </script>
 </body>
 </html>
